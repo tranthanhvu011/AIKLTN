@@ -1,0 +1,5 @@
+#thuvien
+pip install -r requirements.txt
+
+#Thuattoan
+python eval_fasttext_fullindex_stratified.py --jsonl C:\Users\Admin\PycharmProjects\ALKLTN\data_raw\meta_Clothing_Shoes_and_Jewelry_clean.jsonl --out FastText_Run --ft_dim 100 --ft_window 5 --ft_min_count 3 --ft_sg 1 --ft_epochs 5 --num_test 50000 --num_runs 1 --topk 100 --index_factory HNSW32 --export_recs

@@ -1,0 +1,25 @@
+#thuvien
+pip install -r requirements.txt
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+
+
+#Buoc 1
+python CodeDeeplearning/00_resize_images.py
+
+#Buoc 2
+python 01_prepare_dataset_splits.py --meta_gz output/topk_meta.json.gz --img_dir output/images_300 --out_dir data_splits --val_ratio 0.2
+
+#Buoc 3
+python 02_train_efficientnet_b3.py --train_csv data_splits/dataset_train.csv --val_csv data_splits/dataset_val.csv --epochs 10 --batch 32 --img_size 300  --lr 1e-4 --pos_overlap_k 2 --pos_price_delta 0.0 --price_weight 0.0 --num_workers 4 --price_sigma 0.2 --eval_overlap_k 2 --eval_price_pct 0.0
+
+#Buoc 4
+python 03_extract_embeddings.py --csv data_splits/dataset_all.csv --ckpt runs/effb3_cat/ckpt_best.pth --out_dir emb_out --batch 256
+
+#Buoc 5
+python 04_build_faiss_index.py --emb emb_out/embeddings.npy --out ann_index/index.faiss --factory HNSW32
+
+#Buoc 6
+python 05_search_image.py --ckpt runs/effb3_cat/ckpt_best.pth --index ann_index/index.faiss --mapping_csv emb_out/run1/mapping.csv --query_img output/images_300/B0000C9ZBX.jpg --topk 20
+
+#Buoc 7
+python 06_eval_embeddings.py --emb emb_out/embeddings.npy --map emb_out/mapping.csv --val_csv data_splits/dataset_val.csv --index_csv data_splits/dataset_train.csv --all_csv data_splits/dataset_all.csv --topk 5 10 20  --metric cosine --with_strict_recall --plot_dir eval_plots --save_csv eval_plots/metrics_summary.csv

@@ -1,0 +1,14 @@
+# Core for the EfficientNet-B3 pipeline
+timm==1.0.9
+pillow>=10.2.0
+numpy>=1.26.4
+pandas>=2.2.1
+tqdm>=4.66.2
+faiss-cpu>=1.8.0
+pyyaml>=6.0.1
+matplotlib>=3.8.4
+
+# Theo yêu cầu của bạn
+transformers==4.*
+tokenizers==0.*
+pyarrow>=15.0.0
